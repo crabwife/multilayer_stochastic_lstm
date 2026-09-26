@@ -1,4 +1,4 @@
-.PHONY: all a_import b_prepare c_fit d_evaluate e_urn f_plot g_nonergodic h_gate_ablation
+.PHONY: all a_import b_prepare c_fit d_evaluate e_urn f_plot g_nonergodic h_gate_ablation i_retention
 
 all: f_plot
 
@@ -27,3 +27,7 @@ g_nonergodic:
 # Reads the saved g_nonergodic checkpoints; no fitting or E001 task is run.
 h_gate_ablation:
 	cd h_gate_ablation/src && jupyter nbconvert --execute --to notebook h_gate_ablation.ipynb --output h_gate_ablation_executed.ipynb --output-dir ../output --ExecutePreprocessor.timeout=-1
+
+# Controlled retention study; prior task checkpoints are not retrained.
+i_retention:
+	cd i_retention/src && jupyter nbconvert --execute --to notebook i_retention.ipynb --output i_retention_executed.ipynb --output-dir ../output --ExecutePreprocessor.timeout=-1

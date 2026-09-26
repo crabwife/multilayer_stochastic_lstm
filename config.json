@@ -14,5 +14,19 @@
     "repeats": 2, "epochs": 30, "patience": 6, "particles_train": 4,
     "particles_val": 16, "particles_test": 64, "batch": 64,
     "bootstrap": 500
+  },
+  "retention": {
+    "mean_stay": 0.95, "beta_second_shape": [0.6, 1.4],
+    "processes": ["annealed", "episodic"],
+    "policies": ["mean", "step", "episode"],
+    "train_trajectories": 256, "val_trajectories": 64,
+    "test_trajectories": 96, "context": 32,
+    "train_horizon": 16, "test_horizon": 128,
+    "evaluation_horizons": [32, 128],
+    "width": 16, "batch": 64, "epochs": 60, "patience": 10,
+    "lr": 0.002, "weight_decay": 0.0001,
+    "particles_train": 8, "particles_val": 16, "particles_test": 128,
+    "repeats": 2, "bootstrap": 500,
+    "theory_trajectories": 1024, "theory_horizon": 2048
   }
 }
