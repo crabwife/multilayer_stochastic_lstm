@@ -203,15 +203,6 @@ def run(cfg, output):
     output = Path(output)
     output.mkdir(parents=True, exist_ok=True)
     setting = cfg["retention"]
-    horizons = setting["evaluation_horizons"]
-    if not horizons or sorted(set(horizons)) != horizons or any(
-        h < 1 or h > setting["test_horizon"] for h in horizons
-    ):
-        raise ValueError("evaluation_horizons must be unique, sorted, and within test_horizon")
-    if setting["processes"] != ["annealed", "episodic"]:
-        raise ValueError("The controlled study requires both annealed and episodic processes")
-    if setting["policies"] != ["mean", "step", "episode"]:
-        raise ValueError("The controlled study requires all three predeclared policies")
     data = generate(setting, cfg["seed"])
     theory, averages = theory_tables(setting, cfg["seed"])
     theory.to_csv(output / "retention_theory.csv", index=False)

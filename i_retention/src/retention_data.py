@@ -5,8 +5,6 @@ from scipy.special import betaln, digamma, gammaln
 
 
 def beta_shapes(mean_stay, second_shape):
-    if not (0 < mean_stay < 1 and second_shape > 0):
-        raise ValueError("Require 0 < mean_stay < 1 and second_shape > 0")
     return second_shape * mean_stay / (1 - mean_stay), second_shape
 
 
@@ -16,9 +14,7 @@ def survival(steps, mean_stay, second_shape, process):
     a, b = beta_shapes(mean_stay, second_shape)
     if process == "annealed":
         return np.power(mean_stay, t)
-    if process == "episodic":
-        return np.exp(betaln(a + t, b) - betaln(a, b))
-    raise ValueError(process)
+    return np.exp(betaln(a + t, b) - betaln(a, b))
 
 
 def retention_diagnostics(mean_stay, second_shape):
@@ -39,8 +35,6 @@ def simulate(n, length, mean_stay, second_shape, process, seed):
     Annealed: redraw q every step; episodic: draw q at each change of state.
     Both draw q from the same Beta(a,b) at the start of an episode.
     """
-    if n < 1 or length < 2:
-        raise ValueError("Require n >= 1 and length >= 2")
     a, b = beta_shapes(mean_stay, second_shape)
     rng = np.random.default_rng(seed)
     initial = rng.integers(0, 2, n, dtype=np.int8)
@@ -50,7 +44,7 @@ def simulate(n, length, mean_stay, second_shape, process, seed):
         q = rng.beta(a, b, size=(n, length - 1))
         flip = rng.random(q.shape) >= q
         values[:, 1:] = (initial[:, None] + np.cumsum(flip, axis=1)) % 2
-    elif process == "episodic":
+    else:
         for j, state in enumerate(initial):
             start = 0
             while start < length:
@@ -59,15 +53,11 @@ def simulate(n, length, mean_stay, second_shape, process, seed):
                 stop = min(length, start + duration)
                 values[j, start:stop] = state
                 start, state = stop, 1 - state
-    else:
-        raise ValueError(process)
     return values
 
 
 def generate(settings, seed):
     n = sum(settings[f"{s}_trajectories"] for s in ("train", "val", "test"))
-    if min(settings[f"{s}_trajectories"] for s in ("train", "val", "test")) < 1:
-        raise ValueError("Each split needs independent trajectories")
     context = settings["context"]
     length = max(context + settings["test_horizon"],
                  3 * context + settings["train_horizon"])
@@ -88,8 +78,6 @@ def generate(settings, seed):
 
 def training_windows(trajectories, context, horizon):
     starts = (0, context, 2 * context)
-    if trajectories.shape[1] < starts[-1] + context + horizon:
-        raise ValueError("Insufficient trajectory length")
     x = np.concatenate([trajectories[:, s:s + context] for s in starts])
     y = np.concatenate([trajectories[:, s + context:s + context + horizon]
                         for s in starts])

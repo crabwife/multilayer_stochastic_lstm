@@ -2,8 +2,6 @@
 
 Run `make i_retention` at the repository root after installing `requirements.txt`. This is a separate PDP task with a code-only notebook, `input/benchmark` symlink to the shared scoring code, and outputs under `i_retention/output/`. It does not rerun E001 or the earlier synthetic models. Set `retention.repeats=1`, `retention.epochs=2` for a wiring check only; delete this task's checkpoints before restoring settings, since their signatures include the full config.
 
-`python -m unittest discover -s i_retention/tests -v` checks the laws and model interface. The GitHub Actions retention smoke workflow also fits and scores a tiny instance of every policy; it is a wiring test, not an experimental result. The default research run is deliberately larger and should be run locally with PyTorch and Jupyter installed.
-
 ## Question and controlled result
 
 Let `q ~ Beta(a,b)` be the propensity to retain an episode for one more step, with the same one-step mean `mu=a/(a+b)` for every policy.

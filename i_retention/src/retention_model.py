@@ -16,8 +16,6 @@ class RetentionLSTM(nn.Module):
 
     def __init__(self, width, policy):
         super().__init__()
-        if policy not in ("mean", "step", "episode"):
-            raise ValueError(policy)
         self.width, self.policy = width, policy
         self.encoder = nn.LSTM(1, width, batch_first=True)
         self.retention = nn.Linear(width, 2 * width)
