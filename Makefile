@@ -1,4 +1,4 @@
-.PHONY: all a_import b_prepare c_fit d_evaluate e_urn f_plot
+.PHONY: all a_import b_prepare c_fit d_evaluate e_urn f_plot g_nonergodic
 
 all: f_plot
 
@@ -19,3 +19,7 @@ e_urn: d_evaluate
 
 f_plot: e_urn
 	cd f_plot/src && jupyter nbconvert --execute --to notebook f_plot.ipynb --output f_plot_executed.ipynb --output-dir ../output --ExecutePreprocessor.timeout=-1
+
+# Independent synthetic experiment; does not rerun the E001 pipeline.
+g_nonergodic:
+	cd g_nonergodic/src && jupyter nbconvert --execute --to notebook g_nonergodic.ipynb --output g_nonergodic_executed.ipynb --output-dir ../output --ExecutePreprocessor.timeout=-1

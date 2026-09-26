@@ -5,5 +5,14 @@
   "model": {"width": 24, "max_depth": 3, "grid": "screen"},
   "fit": {"batch": 64, "lr": 0.002, "weight_decay": 0.0001, "screen_epochs": 55, "final_epochs": 110, "patience": 10, "train_particles": 4, "val_particles": 16, "repeats": 5, "top_per_depth": 2},
   "evaluation": {"particles": 64, "horizon": 3, "bootstrap": 1000},
-  "urn": {"trajectories": 240, "years": 48, "epochs": 70, "configs": ["DD", "FF", "II", "AA", "AF", "FA", "FI", "IF"]}
+  "urn": {"trajectories": 240, "years": 48, "epochs": 70, "configs": ["DD", "FF", "II", "AA", "AF", "FA", "FI", "IF"]},
+  "nonergodic": {
+    "processes": ["polya", "iid", "sticky"], "train_trajectories": 192,
+    "val_trajectories": 48, "test_trajectories": 48, "context": 32,
+    "horizon": 128, "sticky_stay": 0.95,
+    "configs": ["D", "F", "I", "A", "DD", "FF", "II", "AA", "FI", "IF", "DDD", "AAA"],
+    "repeats": 2, "epochs": 30, "patience": 6, "particles_train": 4,
+    "particles_val": 16, "particles_test": 64, "batch": 64,
+    "bootstrap": 500
+  }
 }
