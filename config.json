@@ -15,6 +15,14 @@
     "particles_val": 16, "particles_test": 64, "batch": 64,
     "bootstrap": 500
   },
+  "layered_retention": {
+    "processes": ["annealed_b0.6", "episodic_b0.6", "episodic_b1.4"],
+    "configs": ["MM", "MS", "SM", "ME", "EM", "EE"],
+    "width": 16, "repeats": 2, "epochs": 60, "patience": 10,
+    "train_horizon": 16, "particles_train": 8, "particles_val": 16,
+    "particles_test": 128, "survival_horizons": [8, 32, 128],
+    "bootstrap": 500
+  },
   "retention": {
     "mean_stay": 0.95, "beta_second_shape": [0.6, 1.4],
     "processes": ["annealed", "episodic"],

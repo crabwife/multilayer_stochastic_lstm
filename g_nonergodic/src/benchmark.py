@@ -17,7 +17,8 @@ from processes import (discrete_crps, ensemble_crps, generate,
 
 def _signature(cfg, process, split):
     # A new independent retention task must not invalidate existing synthetic fits.
-    benchmark_cfg = {key: value for key, value in cfg.items() if key != "retention"}
+    benchmark_cfg = {key: value for key, value in cfg.items()
+                     if key not in ("retention", "layered_retention")}
     digest = hashlib.sha256(json.dumps(benchmark_cfg, sort_keys=True).encode() + process.encode())
     for key in ("train", "val"):
         digest.update(split[key].tobytes())

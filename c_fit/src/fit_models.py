@@ -35,7 +35,7 @@ def fit_one(cfg, arrays, config, replicate, tag, output, epochs=None):
     # Keep pre-benchmark checkpoint identities stable: the independent
     # nonergodic task cannot affect E001 or short-urn training data.
     legacy_cfg = {key: value for key, value in cfg.items()
-                  if key not in ("nonergodic", "retention")}
+                  if key not in ("nonergodic", "retention", "layered_retention")}
     signature = hashlib.sha256(json.dumps(legacy_cfg, sort_keys=True).encode()
         + arrays["one_train_x"].tobytes() + arrays["one_train_y"].tobytes()
         + arrays["one_val_x"].tobytes() + arrays["one_val_y"].tobytes()).hexdigest()

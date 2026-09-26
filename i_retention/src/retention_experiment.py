@@ -21,7 +21,9 @@ def _device():
 
 
 def _signature(cfg, key, split):
-    h = hashlib.sha256(json.dumps(cfg, sort_keys=True).encode() + key.encode())
+    prior_cfg = {name: value for name, value in cfg.items()
+                 if name != "layered_retention"}
+    h = hashlib.sha256(json.dumps(prior_cfg, sort_keys=True).encode() + key.encode())
     for name in ("train", "val"):
         h.update(split[name].tobytes())
     return h.hexdigest()

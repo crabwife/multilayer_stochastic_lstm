@@ -1,4 +1,4 @@
-.PHONY: all a_import b_prepare c_fit d_evaluate e_urn f_plot g_nonergodic h_gate_ablation i_retention
+.PHONY: all a_import b_prepare c_fit d_evaluate e_urn f_plot g_nonergodic h_gate_ablation i_retention j_layered_retention
 
 all: f_plot
 
@@ -31,3 +31,6 @@ h_gate_ablation:
 # Controlled retention study; prior task checkpoints are not retrained.
 i_retention:
 	cd i_retention/src && jupyter nbconvert --execute --to notebook i_retention.ipynb --output i_retention_executed.ipynb --output-dir ../output --ExecutePreprocessor.timeout=-1
+
+j_layered_retention:
+	cd j_layered_retention/src && jupyter nbconvert --execute --to notebook j_layered_retention.ipynb --output j_layered_retention_executed.ipynb --output-dir ../output --ExecutePreprocessor.timeout=-1
