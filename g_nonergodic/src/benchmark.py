@@ -91,7 +91,8 @@ def fit_one(cfg, process, split, config, replicate, output):
     return summary
 
 
-def evaluate_one(cfg, process, split, config, replicate, output):
+def evaluate_one(cfg, process, split, config, replicate, output,
+                 sample_gates=True, emission_seed=None):
     setting = cfg["nonergodic"]
     file = output / "checkpoints" / process / f"{config}_rep{replicate}.pt"
     saved = torch.load(file, map_location="cpu", weights_only=True)
@@ -108,8 +109,11 @@ def evaluate_one(cfg, process, split, config, replicate, output):
     for start in range(0, len(x), setting["batch"]):
         xx = x[start:start + setting["batch"]]
         with torch.no_grad():
-            p = model(xx, setting["particles_test"]).cpu().numpy()
-            counts = model.sample_paths(xx, setting["particles_test"], horizon).sum(-1).cpu().numpy()
+            p = model(xx, setting["particles_test"], sample_gates=sample_gates).cpu().numpy()
+            counts = model.sample_paths(
+                xx, setting["particles_test"], horizon, sample_gates=sample_gates,
+                emission_seed=None if emission_seed is None else emission_seed + start
+            ).sum(-1).cpu().numpy()
         for j, (prob, ensemble) in enumerate(zip(p, counts)):
             ix = start + j
             history = truth[ix, :context]

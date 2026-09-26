@@ -31,6 +31,21 @@ class BinaryModelTests(unittest.TestCase):
             self.assertEqual(tuple(paths.shape), (2, 5, 7))
             self.assertTrue(bool(((paths == 0) | (paths == 1)).all()))
 
+    def test_emission_stream_is_shared_across_gate_interventions(self):
+        x = torch.tensor([[[0.], [1.], [0.]], [[1.], [1.], [0.]]])
+        for config in ("DD", "FI"):
+            torch.manual_seed(63)
+            model = BinaryGateLSTM(config, 4)
+            torch.manual_seed(7)
+            first = model.sample_paths(x, 8, 12, sample_gates=False, emission_seed=991)
+            torch.manual_seed(777)
+            second = model.sample_paths(x, 8, 12, sample_gates=False, emission_seed=991)
+            self.assertTrue(torch.equal(first, second))
+            if config == "DD":
+                torch.manual_seed(7)
+                on = model.sample_paths(x, 8, 12, sample_gates=True, emission_seed=991)
+                self.assertTrue(torch.equal(first, on))
+
 
 if __name__ == "__main__":
     unittest.main()

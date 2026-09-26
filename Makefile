@@ -1,4 +1,4 @@
-.PHONY: all a_import b_prepare c_fit d_evaluate e_urn f_plot g_nonergodic
+.PHONY: all a_import b_prepare c_fit d_evaluate e_urn f_plot g_nonergodic h_gate_ablation
 
 all: f_plot
 
@@ -23,3 +23,7 @@ f_plot: e_urn
 # Independent synthetic experiment; does not rerun the E001 pipeline.
 g_nonergodic:
 	cd g_nonergodic/src && jupyter nbconvert --execute --to notebook g_nonergodic.ipynb --output g_nonergodic_executed.ipynb --output-dir ../output --ExecutePreprocessor.timeout=-1
+
+# Reads the saved g_nonergodic checkpoints; no fitting or E001 task is run.
+h_gate_ablation:
+	cd h_gate_ablation/src && jupyter nbconvert --execute --to notebook h_gate_ablation.ipynb --output h_gate_ablation_executed.ipynb --output-dir ../output --ExecutePreprocessor.timeout=-1

@@ -17,7 +17,7 @@ class BinaryGateLSTM(nn.Module):
         ])
         self.head = nn.Linear(width, 1)
 
-    def _history(self, x, particles):
+    def _history(self, x, particles, sample_gates=True):
         batch, length, _ = x.shape
         zseq = x.repeat_interleave(particles, dim=0)
         hs = [x.new_zeros((batch * particles, self.width)) for _ in self.layers]
@@ -25,27 +25,33 @@ class BinaryGateLSTM(nn.Module):
         for t in range(length):
             z = zseq[:, t, :]
             for j, layer in enumerate(self.layers):
-                hs[j], cs[j] = layer(z, hs[j], cs[j])
+                hs[j], cs[j] = layer(z, hs[j], cs[j], sample=sample_gates)
                 z = hs[j]
         return hs, cs
 
-    def forward(self, x, particles=1):
-        hs, _ = self._history(x, particles)
+    def forward(self, x, particles=1, sample_gates=True):
+        hs, _ = self._history(x, particles, sample_gates)
         return self.head(hs[-1]).reshape(len(x), particles).sigmoid().mean(dim=1)
 
     @torch.no_grad()
-    def sample_paths(self, x, particles, horizon):
+    def sample_paths(self, x, particles, horizon, sample_gates=True, emission_seed=None):
         batch = len(x)
-        hs, cs = self._history(x, particles)
+        hs, cs = self._history(x, particles, sample_gates)
+        emission_rng = None
+        if emission_seed is not None:
+            # Emission draws have their own stream so Beta gate draws cannot
+            # shift the Bernoulli uniforms between the paired interventions.
+            emission_rng = torch.Generator(device=x.device).manual_seed(emission_seed)
         draws = []
         for step in range(horizon):
             p = self.head(hs[-1]).sigmoid()
-            y = torch.bernoulli(p)
+            y = (torch.rand(p.shape, dtype=p.dtype, device=p.device,
+                            generator=emission_rng) < p).to(p.dtype) if emission_rng else torch.bernoulli(p)
             draws.append(y.reshape(batch, particles))
             if step + 1 < horizon:
                 z = y
                 for j, layer in enumerate(self.layers):
-                    hs[j], cs[j] = layer(z, hs[j], cs[j])
+                    hs[j], cs[j] = layer(z, hs[j], cs[j], sample=sample_gates)
                     z = hs[j]
         return torch.stack(draws, dim=-1)
 
