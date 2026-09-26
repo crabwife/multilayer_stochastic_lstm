@@ -1,0 +1,9 @@
+{
+  "seed": 63,
+  "data": {"years": [1982, 2004], "fields": ["A", "B", "C"], "skiprows": 1, "measure_mode": "species_mass", "columns": {"mass": "mass.above"}},
+  "split": {"train_end": 1996, "val_end": 2000, "lookback": 6},
+  "model": {"width": 24, "max_depth": 3, "grid": "screen"},
+  "fit": {"batch": 64, "lr": 0.002, "weight_decay": 0.0001, "screen_epochs": 55, "final_epochs": 110, "patience": 10, "train_particles": 4, "val_particles": 16, "repeats": 5, "top_per_depth": 2},
+  "evaluation": {"particles": 64, "horizon": 3, "bootstrap": 1000},
+  "urn": {"trajectories": 240, "years": 48, "epochs": 70, "configs": ["DD", "FF", "II", "AA", "AF", "FA", "FI", "IF"]}
+}

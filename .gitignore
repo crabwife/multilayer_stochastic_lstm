@@ -1,0 +1,41 @@
+# Python environments
+.venv/
+venv/
+env/
+ENV/
+.envrc
+
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+credentials.json
+service_account*.json
+
+# Python / Jupyter noise
+__pycache__/
+*.py[cod]
+*$py.class
+.ipynb_checkpoints/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# OS and editor noise
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Keep pipeline outputs, including data and figures, under version control.
+!output/
+!output/**
